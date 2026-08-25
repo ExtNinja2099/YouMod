@@ -208,13 +208,6 @@ jobs:
       - name: Install cyan and tbd
         run: pipx install https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
-      - name: Checkout YouMod
-        uses: actions/checkout@v7
-        with:
-          repository: ${{ inputs.repo }}
-          ref: ${{ inputs.branch }}
-          path: YouMod
-
       - name: Clone Open in YouTube (Safari Extension)
         run: |
           git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
@@ -279,12 +272,15 @@ jobs:
         if: ${{ inputs.youquality }}
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
 
-      - name: Build YouMod
-        run: |
-          cd YouMod
-          echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youmod.deb
+      - name: Get YouMod deb
+        run: wget https://github.com/Tonwalter888/YouMod/releases/download/v2.0.0/dev.water888.youmod_2.0.0_iphoneos-arm64.deb
+
+      #- name: Build YouMod
+       # run: |
+        #  cd YouMod
+         # echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
+          #make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          #mv packages/*.deb ${{ github.workspace }}/youmod.deb
         
       - name: Build YouPiP
         if: ${{ inputs.youpip }}
